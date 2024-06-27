@@ -1,43 +1,42 @@
-import React, { useCallback, useState } from "react";
-import { Button, Form, Header, Input, Label, LinkContainer, Error , Success } from "./styles";
-import { setMaxListeners } from "events";
+import React, { useCallback, useState } from 'react';
+import { Button, Form, Header, Input, Label, LinkContainer, Error, Success } from './styles';
+import { setMaxListeners } from 'events';
+import useInput from '@hooks/useInput';
 
 const SignUp = () => {
-  const [nickname, setNickname] = useState('');
+  const [nickname, onChangeNickname, setNickname] = useInput('');
+  const [email, onChangeEmail, setEmail] = useInput('');
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
-  const [email, setEmail] = useState('');
-  const [mismatchError, setMismatchError] = useState(false)
+  const [mismatchError, setMismatchError] = useState(false);
 
-  const onChangeEmail = useCallback((e) => {
-    setEmail(e.target.value)
-  }, [])
-  
-  const onChangeNickname = useCallback((e) => { 
-    setNickname(e.target.value)
-  }, [])
+  const onChangePassword = useCallback(
+    (e) => {
+      setPassword(e.target.value);
+      setMismatchError(e.target.value !== passwordCheck);
+    },
+    [passwordCheck],
+  );
 
-  const onChangePassword = useCallback((e) => { 
-    setPassword(e.target.value)
-    setMismatchError(e.target.value !== passwordCheck);
+  const onChangePasswordCheck = useCallback(
+    (e) => {
+      setPasswordCheck(e.target.value);
+      setMismatchError(e.target.value !== password);
+    },
+    [password],
+  );
 
-  }, [passwordCheck])
+  const onSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (!mismatchError) {
+        console.log('서버로 회원가입');
+      }
+    },
+    [email, nickname, password, passwordCheck, mismatchError],
+  );
 
-  const onChangePasswordCheck = useCallback((e) => { 
-    setPasswordCheck(e.target.value);
-    setMismatchError(e.target.value !== password);
-
-  }, [password])
-
-  const onSubmit = useCallback((e) => {
-    e.preventDefault();
-    if (!mismatchError) {
-      console.log('서버로 회원가입')
-    }
-   }, [email,nickname, password, passwordCheck, mismatchError])
-
-
-    return (
+  return (
     <div id="container">
       <Header>Sleact</Header>
       <Form onSubmit={onSubmit}>
