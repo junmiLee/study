@@ -8,7 +8,7 @@ import { Link, Redirect } from 'react-router-dom';
 import useSWR from 'swr';
 
 const LogIn = () => {
-  const { data, error } = useSWR('http://localhost:3095/api/users', fetcher, {
+  const { data, error, mutate } = useSWR('http://localhost:3095/api/users', fetcher, {
     refreshInterval: 10000,
     dedupingInterval: 10000,
   });
@@ -27,13 +27,23 @@ const LogIn = () => {
             withCredentials: true, // 쿠키 생성
           },
         )
-        .then(() => {})
+        .then(() => {
+          mutate();
+        })
         .catch((error) => {
           setLogInError(error.response?.data?.statusCode === 401);
         });
     },
     [email, password],
   );
+
+  if (data === undefined) {
+    return <div>로딩중..</div>;
+  }
+
+  if (data) {
+    return <Redirect to="/workspace/channel" />;
+  }
 
   // console.log(error, userData);
   // if (!error && userData) {
@@ -62,7 +72,7 @@ const LogIn = () => {
       </Form>
       <LinkContainer>
         아직 회원이 아니신가요?&nbsp;
-        <Link to="/signup">회원가입 하러가기</Link>
+        <Link to="/sign-up">회원가입 하러가기</Link>
       </LinkContainer>
     </div>
   );
