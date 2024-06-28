@@ -8,7 +8,10 @@ import { Link, Redirect } from 'react-router-dom';
 import useSWR from 'swr';
 
 const LogIn = () => {
-  const { data, error } = useSWR('http://localhost:3095/api/users', fetcher);
+  const { data, error } = useSWR('http://localhost:3095/api/users', fetcher, {
+    refreshInterval: 10000,
+    dedupingInterval: 10000,
+  });
   const [logInError, setLogInError] = useState(false);
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
@@ -24,9 +27,7 @@ const LogIn = () => {
             withCredentials: true, // 쿠키 생성
           },
         )
-        .then(() => {
-          // revalidate();
-        })
+        .then(() => {})
         .catch((error) => {
           setLogInError(error.response?.data?.statusCode === 401);
         });
