@@ -27,8 +27,8 @@ const LogIn = () => {
             withCredentials: true, // 쿠키 생성
           },
         )
-        .then(() => {
-          mutate();
+        .then((response) => {
+          mutate(response.data, false);
         })
         .catch((error) => {
           setLogInError(error.response?.data?.statusCode === 401);

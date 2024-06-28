@@ -3,7 +3,23 @@ import axios from 'axios';
 import React, { FC, useCallback } from 'react';
 import { Redirect } from 'react-router-dom';
 import useSWR from 'swr';
-import { revalidateEvents } from 'swr/dist/_internal';
+
+import {
+  AddButton,
+  Channels,
+  Chats,
+  Header,
+  LogOutButton,
+  MenuScroll,
+  ProfileImg,
+  ProfileModal,
+  RightMenu,
+  WorkspaceButton,
+  WorkspaceModal,
+  WorkspaceName,
+  Workspaces,
+  WorkspaceWrapper,
+} from '@layouts/Workspace/styles';
 
 const Workspace: FC = ({ children }) => {
   const { data, error, mutate } = useSWR('http://localhost:3095/api/users', fetcher);
@@ -14,7 +30,7 @@ const Workspace: FC = ({ children }) => {
         withCredentials: true,
       })
       .then(() => {
-        mutate();
+        mutate(false);
       });
   }, []);
 
